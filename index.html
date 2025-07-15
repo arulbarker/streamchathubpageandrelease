@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Chat Group - Multi-Platform Live Chat Management</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px 0;
+            border-bottom: 4px solid #00ff00;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 0 #004400;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 18px;
+            color: #00ff00;
+            text-shadow: 2px 2px 0 #004400;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .download-btn {
+            background: #ff4444;
+            color: white;
+            padding: 10px 20px;
+            border: 3px solid #000;
+            text-decoration: none;
+            font-size: 10px;
+            transition: all 0.3s;
+            box-shadow: 3px 3px 0 #000;
+        }
+        
+        .download-btn:hover {
+            background: #ff6666;
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 #000;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding-top: 100px; /* Add padding to avoid content being hidden by fixed header */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 0, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><rect width="50" height="50" fill="none"/><rect x="20" y="20" width="10" height="10" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-content {
+            z-index: 1;
+            position: relative;
+        }
+        
+        .version-badge {
+            display: inline-block;
+            background: #000;
+            color: #00ff00;
+            padding: 8px 16px;
+            border: 3px solid #00ff00;
+            font-size: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 4px 4px 0 #000;
+            color: #00ff00;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 4px 4px 0 #000, 0 0 10px #00ff00; }
+            to { text-shadow: 4px 4px 0 #000, 0 0 20px #00ff00, 0 0 30px #00ff00; }
+        }
+        
+        .hero p {
+            font-size: 12px;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .btn-primary {
+            background: #ff4444;
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 12px;
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            transition: all 0.3s;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .btn-primary:hover {
+            background: #ff6666;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+        
+        .btn-secondary {
+            background: #000;
+            color: #fff;
+            padding: 15px 30px;
+            border: 4px solid #00ff00;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s;
+            text-shadow: 2px 2px 0 #004400;
+            box-shadow: 4px 4px 0 #004400;
+        }
+        
+        .btn-secondary:hover {
+            background: #00ff00;
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #004400;
+        }
+        
+        .platform-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .platform-badge {
+            background: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: 3px solid #fff;
+            font-size: 10px;
+            animation: bounce 2s infinite;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+        
+        .platform-badge.youtube { border-color: #ff0000; color: #ff0000; animation-delay: 0s; }
+        .platform-badge.tiktok { border-color: #ff00ff; color: #ff00ff; animation-delay: 0.3s; }
+        .platform-badge.twitch { border-color: #9146ff; color: #9146ff; animation-delay: 0.6s; }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        /* Screenshots Section */
+        .screenshots {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .screenshots h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 60px;
+            color: #00ff00;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .screenshot-item {
+            background: #000;
+            border: 4px solid #00ff00;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .screenshot-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 5px 30px rgba(0, 255, 0, 0.5);
+        }
+        
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: contrast(1.1) brightness(1.1);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .screenshot-caption {
+            padding: 20px;
+            text-align: center;
+            background: #000;
+            flex-grow: 1;
+        }
+        
+        .screenshot-caption h3 {
+            font-size: 12px;
+            margin-bottom: 10px;
+            color: #00ff00;
+            text-shadow: 2px 2px 0 #004400;
+        }
+        
+        .screenshot-caption p {
+            color: #ccc;
+            font-size: 8px;
+            line-height: 1.8;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: linear-gradient(45deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 60px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #00ff00;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 30px rgba(0, 255, 0, 0.5);
+            border-color: #00ffff;
+        }
+        
+        .feature-icon {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .feature-card h3 {
+            font-size: 12px;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .feature-card p {
+            font-size: 8px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+        
+        /* Reviews Section */
+        .reviews {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .reviews h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 60px;
+            color: #ff4444;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .review-card {
+            background: #000;
+            border: 3px solid #fff;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .review-card:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.4);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+            background: #00ff00;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 15px;
+            border: 2px solid #000;
+        }
+        
+        .review-info h4 {
+            font-size: 10px;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+        
+        .review-info p {
+            font-size: 8px;
+            color: #ccc;
+        }
+        
+        .stars {
+            color: #ffff00;
+            margin-bottom: 15px;
+            font-size: 12px;
+            text-shadow: 0 0 5px #ffff00;
+        }
+        
+        .review-text {
+            font-size: 8px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        /* Q&A Section */
+        .qa {
+            padding: 80px 0;
+            background: linear-gradient(45deg, #0f3460 0%, #0f4c75 100%);
+        }
+        
+        .qa h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 50px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .qa-item {
+            background: #000;
+            margin-bottom: 20px;
+            border: 3px solid #00ff00;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        .qa-question {
+            padding: 20px;
+            background: #000;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .qa-question:hover {
+            background: #111;
+            color: #00ff00;
+        }
+        
+        .qa-answer {
+            padding: 0 20px 20px;
+            color: #ccc;
+            line-height: 1.8;
+            display: none;
+            font-size: 8px;
+            background: #000;
+        }
+        
+        .qa-answer.active {
+            display: block;
+        }
+        
+        .qa-icon {
+            transition: transform 0.3s;
+            color: #00ff00;
+        }
+        
+        .qa-icon.active {
+            transform: rotate(180deg);
+        }
+        
+        /* Download Section */
+        .download {
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+        }
+        
+        .download h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ff4444;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .download p {
+            font-size: 10px;
+            margin-bottom: 40px;
+            color: #ccc;
+        }
+        
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .download-card {
+            background: #000;
+            border: 4px solid #00ff00;
+            padding: 25px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 30px rgba(0, 255, 0, 0.5);
+        }
+        
+        .download-card h3 {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #00ff00;
+            text-shadow: 2px 2px 0 #004400;
+        }
+        
+        .download-card p {
+            margin-bottom: 20px;
+            color: #ccc;
+            font-size: 8px;
+        }
+        
+        .download-link {
+            background: #ff4444;
+            color: #fff;
+            padding: 12px 25px;
+            border: 3px solid #000;
+            text-decoration: none;
+            font-size: 10px;
+            transition: all 0.3s;
+            box-shadow: 3px 3px 0 #000;
+            display: inline-block;
+        }
+        
+        .download-link:hover {
+            background: #ff6666;
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 #000;
+        }
+        
+        /* Footer */
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 60px 0 30px;
+            border-top: 4px solid #00ff00;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 12px;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 2px 2px 0 #004400;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 8px;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+        
+        .footer-bottom {
+            border-top: 2px solid #333;
+            padding-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 8px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .modal-content {
+            background: #000;
+            border: 4px solid #00ff00;
+            margin: 5% auto;
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+        
+        .modal h2 {
+            color: #00ff00;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #004400;
+        }
+        
+        .modal p {
+            color: #ccc;
+            font-size: 8px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 20px;
+            color: #ff4444;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close:hover {
+            color: #ff6666;
+            text-shadow: 0 0 5px #ff6666;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 10px; }
+            .nav-links { display: none; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .platform-badges { justify-content: center; }
+            .screenshot-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .reviews-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">STREAM CHAT HUB</div>
+            <ul class="nav-links">
+                <li><a href="#home">HOME</a></li>
+                <li><a href="#features">FEATURES</a></li>
+                <li><a href="#screenshots">SCREENSHOTS</a></li>
+                <li><a href="#reviews">REVIEWS</a></li>
+                <li><a href="#qa">FAQ</a></li>
+            </ul>
+            <a href="https://github.com/arulbarker/streamchathubpageandrelease/releases/download/v1.02/streamchat_hub_v1.02.zip" class="download-btn">DOWNLOAD</a>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="version-badge">VERSION 1.02</div>
+                <h1>UNIFY YOUR LIVE CHAT EXPERIENCE</h1>
+                <p>Consolidate all your live chat messages from YouTube, TikTok, and Twitch into one powerful desktop application. Perfect for streamers who broadcast across multiple platforms.</p>
+                
+                <div class="cta-buttons">
+                    <a href="https://github.com/arulbarker/streamchathubpageandrelease/releases/download/v1.02/streamchat_hub_v1.02.zip" class="btn-primary">DOWNLOAD NOW</a>
+                    <a href="#screenshots" class="btn-secondary">VIEW SCREENSHOTS</a>
+                </div>
+                
+                <div class="platform-badges">
+                    <div class="platform-badge youtube">YOUTUBE LIVE</div>
+                    <div class="platform-badge tiktok">TIKTOK LIVE</div>
+                    <div class="platform-badge twitch">TWITCH</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots" class="screenshots">
+        <div class="container">
+            <h2>SEE IT IN ACTION</h2>
+            <div class="screenshot-grid">
+                <div class="screenshot-item">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgoZwC0o2hJUDwXlrpcUewLWtJnYG_k6zcf_1W0Als3enIlFtDt12lohKKmwiT7DFCPoIYuE2J5YoYVHn_IL1r2_zSPwTYFbvWHToaLqghXvgsLfacdbzql0K3DJOaJJwk7kAcSOqlc45pLXQngfpoqoLjdhKSzn8lJQUOG6aj6OTV9FHvPvpaupHaDk3LS/w626-h1578/Screenshot%202025-07-14%20194211.png" alt="Real-Time Chat View"
+                         onerror="this.onerror=null;this.src='https://placehold.co/400x300/000000/FFFFFF?text=Image+Not+Found';">
+                    <div class="screenshot-caption">
+                        <h3>REAL-TIME CHAT VIEW</h3>
+                        <p>All chats from three platforms are displayed in real-time.</p>
+                    </div>
+                </div>
+                
+                <div class="screenshot-item">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4I3EMp5qCDWE2lv3rlOEqiAm8Noi2ICaf7ttrJGkkrqObCywhaTy1TzwvO4_cSGfzD4f1hRYH9KXrWxHWDOLcSJzl5CgCx2h8A58Z-8dWG3JnpI_InEphmvwMdSQdd7GAdmQ-nfYHgCZiKhhs_m4MHh-AQdDimTnQ7b3E_z0dEuFMCHG72i-TPtuDR1Hw/w621-h1554/Screenshot%202025-07-14%20194205.png" alt="Priority & Global Chat Mode"
+                         onerror="this.onerror=null;this.src='https://placehold.co/400x300/000000/FFFFFF?text=Image+Not+Found';">
+                    <div class="screenshot-caption">
+                        <h3>PRIORITY & GLOBAL CHAT MODE</h3>
+                        <p>Separate important chats like donations, gifts, and new members from regular chat.</p>
+                    </div>
+                </div>
+                
+                <div class="screenshot-item">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjfnTtBnyfDy-5cQ2ylk-oj1x0vYvH5WBKzssTmHNEotrlDAJ5G5NJKrGACZGYdTfsFvrTC8sX-QEYT_vt0NRSZUeZrHD3BNkOi_TuiM42uAIdgeFv4_ulFA0Ig6HocOdx1aocvLdo42mco_va5gNJqOz_v802lisntsQdLBBxZdRp49ZqDdUvHsVnbydML/w627-h751/Screenshot%202025-07-13%20220906.png" alt="Flexible Event Notifications"
+                         onerror="this.onerror=null;this.src='https://placehold.co/400x300/000000/FFFFFF?text=Image+Not+Found';">
+                    <div class="screenshot-caption">
+                        <h3>FLEXIBLE EVENT NOTIFICATIONS</h3>
+                        <p>Choose which event notifications you want to show or hide.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>POWERFUL FEATURES</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>MULTI-PLATFORM INTEGRATION</h3>
+                    <p>Connect to YouTube Live, TikTok Live, and Twitch simultaneously. Monitor all your chat messages in one centralized dashboard without switching between tabs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>REAL-TIME UPDATES</h3>
+                    <p>Get instant notifications for chat messages, super chats, donations, follows, and other important events across all platforms with zero delay.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>CUSTOMIZABLE INTERFACE</h3>
+                    <p>Personalize chat colors for each platform, set up keyword filters, and configure audio notifications for different types of events and interactions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>AUTOMATIC LOGGING</h3>
+                    <p>All chat messages and events are automatically saved to local files. Export your data anytime for analysis or record-keeping purposes.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>ADVANCED SETTINGS</h3>
+                    <p>Fine-tune your experience with comprehensive settings for channels, visual preferences, event notifications, content filters, and data management.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>LIGHTWEIGHT & FAST</h3>
+                    <p>Built for performance with minimal resource usage. Clean, modern interface that won't slow down your streaming setup or computer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews">
+        <div class="container">
+            <h2>WHAT STREAMERS ARE SAYING</h2>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">JS</div>
+                        <div class="review-info">
+                            <h4>JAKE STREAMPRO</h4>
+                            <p>Full-time Variety Streamer</p>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"This app has completely changed my streaming workflow. Being able to see all my chat messages from YouTube, TikTok, and Twitch in one place saves me so much time and helps me engage better with my audience across all platforms."</p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">MG</div>
+                        <div class="review-info">
+                            <h4>MAYA GAMERGIRL</h4>
+                            <p>Gaming Content Creator</p>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"The customization options are incredible! I love how I can set different colors for each platform and filter out spam. The super chat notifications never let me miss important donations. Highly recommended!"</p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">TC</div>
+                        <div class="review-info">
+                            <h4>TECHCREATOR MIKE</h4>
+                            <p>Tech Review Streamer</p>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Simple, clean, and effective. The logging feature is a game-changer for analyzing my audience engagement. The app is lightweight and doesn't affect my streaming performance at all."</p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">AS</div>
+                        <div class="review-info">
+                            <h4>ARTSTREAM SARAH</h4>
+                            <p>Digital Art Streamer</p>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★☆</div>
+                    <p class="review-text">"Great tool for multi-platform streaming. Setup was easy and the interface is intuitive. Would love to see more platform integrations in future updates, but overall very satisfied with the current features."</p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">DT</div>
+                        <div class="review-info">
+                            <h4>DJ_TECHBEATS</h4>
+                            <p>Music Producer & Streamer</p>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Perfect for my live DJ sets where I stream simultaneously on multiple platforms. The real-time chat aggregation helps me stay connected with viewers everywhere. The audio notification feature is especially useful when I'm focused on mixing."</p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">LK</div>
+                        <div class="review-info">
+                            <h4>LIFESTYLEKAT</h4>
+                            <p>Lifestyle & Wellness Streamer</p>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"This has made my daily streams so much more manageable. I can easily moderate across all platforms and the export feature helps me track my community growth. It's become an essential part of my streaming toolkit."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="qa" class="qa">
+        <div class="container">
+            <h2>FREQUENTLY ASKED QUESTIONS</h2>
+            
+            <div class="qa-item">
+                <button class="qa-question">
+                    HOW DO I CONNECT MY STREAMING ACCOUNTS TO THE APP?
+                    <span class="qa-icon">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Simply open the settings panel and enter your channel information for each platform. For YouTube, you'll need your video URL or video ID. For TikTok, enter your unique username. For Twitch, provide your channel name. No complex authentication required!
+                </div>
+            </div>
+            
+            <div class="qa-item">
+                <button class="qa-question">
+                    WHAT PLATFORMS ARE CURRENTLY SUPPORTED?
+                    <span class="qa-icon">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Stream Chat Group currently supports YouTube Live, TikTok Live, and Twitch. We're actively working on adding support for more platforms like Facebook Gaming and Instagram Live in future updates.
+                </div>
+            </div>
+            
+            <div class="qa-item">
+                <button class="qa-question">
+                    DOES THE APP WORK ON MAC AND LINUX?
+                    <span class="qa-icon">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Yes! Stream Chat Group is built with Python and works on Windows, macOS, and Linux. We provide pre-compiled versions for all major operating systems, so you don't need to install Python separately.
+                </div>
+            </div>
+            
+            <div class="qa-item">
+                <button class="qa-question">
+                    CAN I CUSTOMIZE THE CHAT COLORS AND NOTIFICATIONS?
+                    <span class="qa-icon">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Absolutely! You can set custom colors for each platform, configure audio notifications for different events like super chats and donations, and even filter out specific keywords or users to keep your chat clean.
+                </div>
+            </div>
+            
+            <div class="qa-item">
+                <button class="qa-question">
+                    IS MY CHAT DATA STORED SECURELY?
+                    <span class="qa-icon">▼</span>
+                </button>
+                <div class="qa-answer">
+                    All your chat data is stored locally on your computer. We don't send any data to external servers, ensuring your privacy and security. You have full control over your data and can export or delete it anytime.
+                </div>
+            </div>
+            
+            <div class="qa-item">
+                <button class="qa-question">
+                    WILL THIS AFFECT MY STREAMING PERFORMANCE?
+                    <span class="qa-icon">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Stream Chat Group is designed to be lightweight and efficient. It uses minimal system resources and won't impact your streaming quality or frame rates. The app runs independently of your streaming software.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="download">
+        <div class="container">
+            <h2>READY TO START STREAMING?</h2>
+            <p>Download Stream Chat Group now and experience more efficient streaming across all platforms!</p>
+            
+            <div class="download-grid">
+                <div class="download-card">
+                    <h3>WINDOWS</h3>
+                    <p>Compatible with Windows 10/11<br>64-bit architecture</p>
+                    <a href="https://github.com/arulbarker/streamchathubpageandrelease/releases/download/v1.02/streamchat_hub_v1.02.zip" class="download-link">DOWNLOAD ZIP</a>
+                </div>
+                
+                <div class="download-card">
+                    <h3>MACOS</h3>
+                    <p>Compatible with macOS 10.15+<br>Intel & Apple Silicon</p>
+                    <a href="https://github.com/arulbarker/streamchathubpageandrelease/releases/download/v1.02/streamchat_hub_v1.02.zip" class="download-link">DOWNLOAD ZIP</a>
+                </div>
+                
+                <div class="download-card">
+                    <h3>LINUX</h3>
+                    <p>Compatible with Ubuntu 20.04+<br>Debian-based distros</p>
+                    <a href="https://github.com/arulbarker/streamchathubpageandrelease/releases/download/v1.02/streamchat_hub_v1.02.zip" class="download-link">DOWNLOAD ZIP</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PRODUCT</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#screenshots">Screenshots</a></li>
+                        <li><a href="#download">Download</a></li>
+                        <li><a href="#" onclick="openModal('changelog')">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>SUPPORT</h3>
+                    <ul>
+                        <li><a href="#qa">FAQ</a></li>
+                        <li><a href="#" onclick="openModal('privacy')">Privacy Policy</a></li>
+                        <li><a href="#" onclick="openModal('terms')">Terms of Service</a></li>
+                        <li><a href="mailto:support@streamchatgroup.com">Contact Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>COMMUNITY</h3>
+                    <ul>
+                        <li><a href="#">Discord Server</a></li>
+                        <li><a href="#">GitHub Repository</a></li>
+                        <li><a href="#">Reddit Community</a></li>
+                        <li><a href="#">Twitter Updates</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>DEVELOPERS</h3>
+                    <ul>
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">Plugin Development</a></li>
+                        <li><a href="#">Open Source</a></li>
+                        <li><a href="#">Bug Reports</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Stream Chat Hub. Built with ❤️ for the streaming community.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('privacy')">&times;</span>
+            <h2>PRIVACY POLICY</h2>
+            <p><strong>Last updated: July 16, 2025</strong></p>
+            
+            <p><strong>1. INFORMATION WE COLLECT</strong></p>
+            <p>Stream Chat Hub operates entirely on your local device. We do not collect, store, or transmit any personal information or chat data to external servers. All data remains on your computer.</p>
+            
+            <p><strong>2. LOCAL DATA STORAGE</strong></p>
+            <p>- Chat messages and events from connected platforms</p>
+            <p>- Application settings and preferences</p>
+            <p>- Channel configuration data</p>
+            <p>- Custom filter and notification settings</p>
+            
+            <p><strong>3. THIRD-PARTY SERVICES</strong></p>
+            <p>Stream Chat Hub connects to third-party platforms (YouTube, TikTok, Twitch) using their public APIs. We only access publicly available chat data from your streams. We do not access private information or account credentials.</p>
+            
+            <p><strong>4. DATA SECURITY</strong></p>
+            <p>Since all data is stored locally, you have complete control over your information. We recommend regular backups if you want to preserve your chat logs and settings.</p>
+            
+            <p><strong>5. CONTACT US</strong></p>
+            <p>If you have questions about this Privacy Policy, contact us at privacy@streamchathub.com</p>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('terms')">&times;</span>
+            <h2>TERMS OF SERVICE</h2>
+            <p><strong>Last updated: July 16, 2025</strong></p>
+            
+            <p><strong>1. ACCEPTANCE OF TERMS</strong></p>
+            <p>By downloading and using Stream Chat Hub, you agree to these Terms of Service.</p>
+            
+            <p><strong>2. USE LICENSE</strong></p>
+            <p>Stream Chat Hub is provided free of charge for personal and commercial use. You may not redistribute, modify, or reverse engineer the application.</p>
+            
+            <p><strong>3. DISCLAIMER</strong></p>
+            <p>The software is provided "as is" without warranty of any kind. We are not responsible for any issues arising from the use of third-party platform APIs.</p>
+            
+            <p><strong>4. LIMITATIONS</strong></p>
+            <p>You are responsible for complying with the terms of service of connected platforms (YouTube, TikTok, Twitch). Stream Chat Hub is not affiliated with these platforms.</p>
+            
+            <p><strong>5. TERMINATION</strong></p>
+            <p>These terms remain in effect until terminated. You may terminate by uninstalling the application.</p>
+        </div>
+    </div>
+
+    <!-- Changelog Modal -->
+    <div id="changelog-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('changelog')">&times;</span>
+            <h2>CHANGELOG</h2>
+            
+            <p><strong>VERSION 1.02 - JULY 16, 2025</strong></p>
+            <p>- Updated app name to Stream Chat Hub</p>
+            <p>- Minor bug fixes and performance improvements</p>
+            
+            <p><strong>VERSION 1.01 - JULY 14, 2025</strong></p>
+            <p>- Initial public release</p>
+            <p>- Multi-platform support for YouTube, TikTok, and Twitch</p>
+            <p>- Real-time chat aggregation</p>
+            <p>- Customizable interface and notifications</p>
+            <p>- Local data logging and export functionality</p>
+            <p>- Advanced filtering and moderation tools</p>
+            <p>- Cross-platform compatibility (Windows, macOS, Linux)</p>
+            
+            <p><strong>UPCOMING FEATURES</strong></p>
+            <p>- Facebook Gaming integration</p>
+            <p>- Instagram Live support</p>
+            <p>- Plugin system for custom extensions</p>
+            <p>- Enhanced analytics dashboard</p>
+            <p>- Cloud backup options</p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    // Adjust for fixed header height
+                    const headerOffset = 100;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        // Q&A accordion functionality
+        document.querySelectorAll('.qa-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const icon = this.querySelector('.qa-icon');
+                
+                const isActive = answer.classList.contains('active');
+
+                // Close all other answers
+                document.querySelectorAll('.qa-answer.active').forEach(otherAnswer => {
+                    otherAnswer.classList.remove('active');
+                    otherAnswer.previousElementSibling.querySelector('.qa-icon').classList.remove('active');
+                });
+                
+                // Toggle current answer if it wasn't the one already open
+                if (!isActive) {
+                    answer.classList.add('active');
+                    icon.classList.add('active');
+                }
+            });
+        });
+
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId + '-modal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId + '-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Typing effect for hero title
+        const titleElement = document.querySelector('.hero h1');
+        if (titleElement) {
+            const text = titleElement.textContent;
+            titleElement.textContent = '';
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    titleElement.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            }
+            
+            // Start typing effect after a short delay
+            window.addEventListener('load', () => {
+                setTimeout(typeWriter, 500);
+            });
+        }
+    </script>
+</body>
+</html>
